@@ -16,7 +16,6 @@ Adds some convenience scripts to docker images
 | /usr/local/bin/docker-image-cleanup | Cleanup for docker images after package installations                                     |
 | /usr/local/bin/docker-image-info    | Gets information about the current docker images (run `generate-dockerimage-info before`) |
 | /usr/local/bin/generate-locales     | Generates system locales (eg. for number or date formatting)                              |
-|:------------------------------------|:------------------------------------------------------------------------------------------|
 
 
 ## Usage
