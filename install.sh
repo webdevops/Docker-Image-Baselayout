@@ -7,6 +7,7 @@ TARGET_DIR="/"
 
 if [ "$#" -eq 1 ]; then
     TARGET_DIR="$1"
+    mkdir -p "$1"
 fi
 
 umask 0022
