@@ -10,13 +10,13 @@ export DEBIAN_FRONTEND=noninteractive
 if [[ -f "/tmp/.apt-update" ]]; then
     echo "Detected prefetched 'apt-get update'"
     # Update packages
-    apt-get dist-upgrade -y -f
+    RUNLEVEL=1 apt-get dist-upgrade -y -f
 else
     # Update apt cache
     apt-get update
 
     # Update packages
-    apt-get dist-upgrade -y -f
+    RUNLEVEL=1 apt-get dist-upgrade -y -f
 
     # Clear files (reduce snapshot size)
     rm -rf /var/lib/apt/lists/*

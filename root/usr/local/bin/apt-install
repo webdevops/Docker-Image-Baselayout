@@ -10,13 +10,13 @@ export DEBIAN_FRONTEND=noninteractive
 if [[ -f "/tmp/.apt-update" ]]; then
     echo "Detected prefetched 'apt-get update'"
     # Install packages
-    apt-get install -y -f --no-install-recommends $*
+    RUNLEVEL=1 apt-get install -y -f --no-install-recommends $*
 else
     # Update apt cache
     apt-get update
 
     # Install packages
-    apt-get install -y -f --no-install-recommends $*
+    RUNLEVEL=1 apt-get install -y -f --no-install-recommends $*
 
     # Clear files (reduce snapshot size)
     rm -rf /var/lib/apt/lists/*
