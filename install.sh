@@ -8,10 +8,10 @@ umask 0022
 
 if [ -f "/sbin/apk" ]; then
     # Alpine linux
-    apk add --no-cache ca-certificates wget --virtual .webdevops-baselayout-deps
+    apk add --no-cache ca-certificates wget --virtual .d2ViZGV2b3BzLWJhc2VsYXlvdXQ-deps
     update-ca-certificates
     wget -O /tmp/baselayout.tar.gz https://github.com/webdevops/Docker-Image-Baselayout/archive/latest.tar.gz
-    apk del .webdevops-baselayout-deps
+    apk del .d2ViZGV2b3BzLWJhc2VsYXlvdXQ-deps
 else
     # General linux
     wget -O /tmp/baselayout.tar.gz https://github.com/webdevops/Docker-Image-Baselayout/archive/latest.tar.gz
