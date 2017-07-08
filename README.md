@@ -22,16 +22,11 @@ Adds some convenience scripts to docker images
 
 ### General docker images
 
-    RUN umask 0022 \
-        && wget -O /tmp/baselayout.tar.gz https://github.com/webdevops/Docker-Image-Baselayout/archive/latest.tar.gz \
-        && tar  --no-same-permissions --strip-components=2 -xf /tmp/baselayout.tar.gz  -C / \
-        && rm -f /tmp/baselayout.tar.gz
+    RUN wget -O- https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh | sh
 
 ### Alpine
 
-    RUN umask 0022 \
-        && apk add --no-cache ca-certificates wget \
+    RUN apk add --no-cache ca-certificates wget --virtual .webdevops-baselayout-deps \
         && update-ca-certificates \
-        && wget -O /tmp/baselayout.tar.gz https://github.com/webdevops/Docker-Image-Baselayout/archive/latest.tar.gz \
-        && tar --no-same-permissions --strip-components=2 -xf /tmp/baselayout.tar.gz  -C / \
-        && rm -f /tmp/baselayout.tar.gz
+        && wget -O- https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh | sh \
+        && apk del .webdevops-baselayout-deps
