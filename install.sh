@@ -18,5 +18,5 @@ else
 fi
 
 
-tar --no-same-permissions --strip-components=2 -xf /tmp/baselayout.tar.gz  -C
+tar --no-same-permissions --strip-components=2 -xf /tmp/baselayout.tar.gz  -C /
 rm -f /tmp/baselayout.tar.gz
