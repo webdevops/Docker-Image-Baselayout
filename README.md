@@ -21,12 +21,49 @@ Adds some convenience scripts to docker images
 ## Usage
 
 ### General docker images
+needs wget installed
 
-    RUN wget -O- https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh | sh
+    RUN wget -O /tmp/baselayout-install.sh https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh \
+        && sh /tmp/baselayout-install.sh \
+        && rm -f /tmp/baselayout-install.sh
+
+### Multi stage docker build (requires docker 17.06 or later)
+
+    FROM alpine:latest AS baselayout
+    RUN apk add --no-cache ca-certificates wget \
+        && update-ca-certificates \
+        && wget -O /tmp/baselayout-install.sh https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh \
+        && sh /tmp/baselayout-install.sh /baselayout
+        
+    FROM ....
+    COPY --from=baselayout /baselayout /
+
+### Debian/Ubuntu docker images
+
+    RUN apt-get update \
+        && apt-get install -y -f --no-install-recommends wget ca-certificates \
+        && wget -O /tmp/baselayout-install.sh https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh?123 \
+        && sh /tmp/baselayout-install.sh \
+        && rm -f /tmp/baselayout-install.sh \
+        && apt-get remove --auto-remove -y -f wget ca-certificates \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get clean -y
+
+### RedHat/Centos docker images
+
+    RUN yum -y install wget \
+        && wget -O /tmp/baselayout-install.sh https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh \
+        && sh /tmp/baselayout-install.sh \
+        && rm -f /tmp/baselayout-install.sh \
+        && yum -y erase wget \
+        && yum clean all
+
 
 ### Alpine
 
     RUN apk add --no-cache ca-certificates wget --virtual .webdevops-baselayout-deps \
         && update-ca-certificates \
-        && wget -O- https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh | sh \
+        && wget -O /tmp/baselayout-install.sh https://raw.githubusercontent.com/webdevops/Docker-Image-Baselayout/master/install.sh \
+        && sh /tmp/baselayout-install.sh \
+        && rm -f /tmp/baselayout-install.sh \
         && apk del .webdevops-baselayout-deps
