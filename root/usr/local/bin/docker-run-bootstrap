@@ -3,6 +3,11 @@
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 set -o errexit   ## set -e : exit the script if any statement returns a non-true return value
 
+if [ -f /bin/bash ]; then
+    ## execute with bash if possible
+    exec /bin/bash "$0" "$@"
+fi
+
 # Make all scripts executable
 if [ -d /opt/docker/bin/ ]; then
     find /opt/docker/bin/ -type f -iname '*.sh' -print0 | xargs --no-run-if-empty -0 chmod +x
