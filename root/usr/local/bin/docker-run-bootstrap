@@ -16,47 +16,29 @@ if [ -d /opt/docker/bin/usr-bin ]; then
     done
 fi
 
+
+globexists() {
+  test -e "$1" -o -L "$1"
+}
+
+execScriptsInPath() {
+    SCRIPT_DIRECTORY="$1"
+    if [ -d "$SCRIPT_DIRECTORY" ]; then
+        if globexists "${SCRIPT_DIRECTORY}/"*.sh; then
+            echo ":: Running scripts in ${SCRIPT_DIRECTORY}"
+            for FILE in "${SCRIPT_DIRECTORY}/"*.sh; do
+                echo "-> Executing ${FILE}"
+
+                # run custom scripts, only once
+                . "$FILE"
+                rm -f -- "$FILE"
+            done
+        fi
+    fi
+}
+
 # Bootstrap
-if [ -d /opt/docker/provision/bootstrap.d ]; then
-    while read FILE; do
-        echo "-> Executing ${FILE}"
-
-        # run custom scripts, only once
-        . "$FILE"
-        rm -f -- "$FILE"
-    done < <(find /opt/docker/provision/bootstrap.d/ -name "*.sh")
-fi
-
-
-# build.d
-if [ -d /opt/docker/provision/build.d ]; then
-    while read FILE; do
-        echo "-> Executing ${FILE}"
-
-        # run custom scripts, only once
-        . "$FILE"
-        rm -f -- "$FILE"
-    done < <(find /opt/docker/provision/build.d -name "*.sh")
-fi
-
-# bootstrap.d
-if [ -d /bootstrap.d ]; then
-    while read FILE; do
-        echo "-> Executing ${FILE}"
-
-        # run custom scripts, only once
-        . "$FILE"
-        rm -f -- "$FILE"
-    done < <(find /bootstrap.d -name "*.sh")
-fi
-
-# build.d
-if [ -d /build.d ]; then
-    while read FILE; do
-        echo "-> Executing ${FILE}"
-
-        # run custom scripts, only once
-        . "$FILE"
-        rm -f -- "$FILE"
-    done < <(find /build.d -name "*.sh")
-fi
+execScriptsInPath "/opt/docker/provision/bootstrap.d"
+execScriptsInPath "/opt/docker/provision/build.d"
+execScriptsInPath "/bootstrap.d"
+execScriptsInPath "/build.d"
