@@ -1,0 +1,45 @@
+#!/bin/sh
+
+set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
+set -o errexit   ## set -e : exit the script if any statement returns a non-true return value
+
+# Make all scripts executable
+find /opt/docker/bin/ -type f -iname '*.sh' -print0 | xargs --no-run-if-empty -0 chmod +x
+
+# Enable usr-bin executables
+find /opt/docker/bin/usr-bin -type f | while read USR_BIN_FILE; do
+    chmod +x -- "$USR_BIN_FILE"
+    ln -n -f -- "$USR_BIN_FILE" "/usr/local/bin/$(basename "$USR_BIN_FILE")"
+done
+
+if [[ -d /opt/docker/provision/bootstrap.d ]]; then
+    for FILE in /opt/docker/provision/bootstrap.d/*.sh; do
+        echo "-> Executing ${FILE}"
+
+        # run custom scripts, only once
+        . "$FILE"
+        rm -f -- "$FILE"
+    done
+fi
+
+
+if [[ -d /opt/docker/provision/build.d ]]; then
+    for FILE in /opt/docker/provision/build.d/*.sh; do
+        echo "-> Executing ${FILE}"
+
+        # run custom scripts, only once
+        . "$FILE"
+        rm -f -- "$FILE"
+    done
+fi
+
+
+if [[ -d /bootstrap.d ]]; then
+    for FILE in /bootstrap.d/*.sh; do
+        echo "-> Executing ${FILE}"
+
+        # run custom scripts, only once
+        . "$FILE"
+        rm -f -- "$FILE"
+    done
+fi
