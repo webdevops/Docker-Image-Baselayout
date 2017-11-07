@@ -3,9 +3,11 @@
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 set -o errexit   ## set -e : exit the script if any statement returns a non-true return value
 
-if [ -f /bin/bash ]; then
-    ## execute with bash if possible
-    exec /bin/bash "$0" "$@"
+## execute with bash if possible
+if [ ! -n "${BASH+x}" ]; then
+    if [ -f /bin/bash ]; then
+        exec /bin/bash "$0" "$@"
+    fi
 fi
 
 # Make all scripts executable
